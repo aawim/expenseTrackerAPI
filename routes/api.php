@@ -37,10 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ->group(function () {
             Route::get('/', 'index')->name('roles.index');
             Route::post('/', 'store')->name('roles.store');
-            Route::get('{role}', 'show')->name('roles.show');
-            Route::match(['put', 'patch'], '{role}', 'update')->name('roles.update');
-            Route::delete('{role}', 'destroy')->name('roles.destroy');
-            Route::post('{role}/permissions', 'syncPermissions');
+            Route::get('/{role}', 'show')->name('roles.show');
+            Route::patch( '/{role}', 'update')->name('roles.update');
+            Route::delete('/{role}', 'destroy')->name('roles.destroy');
+            Route::post('/{role}/permissions', 'syncPermissions');
         });
 
     //  Permission Management

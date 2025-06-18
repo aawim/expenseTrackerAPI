@@ -55,30 +55,30 @@ class User extends Authenticatable
         return $this->belongsTo(related: Role::class);
     }
 
-    // Add these relationships to the existing User model
-public function expenses()
-{
-    return $this->hasMany(Expense::class);
-}
+  
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 
-public function categories()
-{
-    return $this->hasMany(Category::class);
-}
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
 
-public function paymentMethods()
-{
-    return $this->hasMany(PaymentMethod::class);
-}
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
 
-public function budgets()
-{
-    return $this->hasMany(Budget::class);
-}
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class);
+    }
 
-public function incomes()
-{
-    return $this->hasMany(Income::class);
-}
+    public function incomes()
+    {
+        return $this->hasMany(Income::class);
+    }
 
 }

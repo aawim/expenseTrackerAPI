@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use Spatie\Permission\Models\Role as SpatieRole;
+
 // use Illuminate\Database\Eloquent\Model;
 
 class Role extends SpatieRole
@@ -10,5 +11,7 @@ class Role extends SpatieRole
         'name','guard_name'
     ];
 
+
+    
 
 }

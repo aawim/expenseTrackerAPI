@@ -5,9 +5,9 @@ namespace Database\Seeders;
 // use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -18,30 +18,30 @@ class RolePermissionSeeder extends Seeder
     {
         // 1. Create permissions
         $permissions = [
-            'create user',
-            'edit user',
-            'delete user',
-            'view user',
+            'create_user',
+            'edit_user',
+            'delete_user',
+            'view_user',
 
-            'view roles',
-            'create roles',
-            'edit roles',
-            'delete roles',
+            'view_roles',
+            'create_roles',
+            'edit_roles',
+            'delete_roles',
 
-            'view permissions',
-            'create permissions',
-            'edit permissions',
-            'delete permissions',
+            'view_permissions',
+            'create_permissions',
+            'edit_permissions',
+            'delete_permissions',
 
-            'view admin',
-            'create admin',
-            'edit admin',
-            'delete admin',
+            'view_admin',
+            'create_admin',
+            'edit_admin',
+            'delete_admin',
 
-            'view expense',
-            'create expense',
-            'edit expense',
-            'delete expense',
+            'view_expense',
+            'create_expense',
+            'edit_expense',
+            'delete_expense',
 
         ];
 
@@ -62,7 +62,7 @@ class RolePermissionSeeder extends Seeder
             ['email' => 'admin@mail.com'],
             [
                 'name'     => 'Admin User',
-                'password' => Hash::make('12345678'), // Change this!
+                'password' => Hash::make('12345678a'), // Change this!
             ]
         );
 
@@ -70,7 +70,23 @@ class RolePermissionSeeder extends Seeder
         $adminUser->assignRole($admin);
 
         $manager->syncPermissions([
-            'view user',
+            'view_user',
+        ]);
+
+        // 3. Create admin user
+        $user = User::firstOrCreate(
+            ['email' => 'user@mail.com'],
+            [
+                'name'     => 'User25',
+                'password' => Hash::make('12345678a'), // Change this!
+            ]
+        );
+
+        // 4. Assign Admin role to the user
+        $user->assignRole($user);
+
+        $user->syncPermissions([
+            'view_user',
         ]);
 
     }

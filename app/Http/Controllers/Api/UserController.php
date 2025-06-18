@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -15,76 +17,55 @@ class UserController extends Controller
 
         $user = $request->user(); // Get the authenticated user
 
-        if (! $user->hasRole('Admin')) {
-            return response()->json(['message' => 'Forbidden. Admins only.'], 403);
+        if (! ($user->hasRole('Admin') || $user->hasPermissionTo('create_user'))) {
+            return response()->json(['message' => 'Forbidden. Admins with permission only.'], 403);
         }
         return UserResource::collection(User::with('role')->paginate());
 
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name'     => 'required',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            // 'role_id'  => 'nullable|exists:roles,id',
-        ]);
+        // $data = $request->validate([
+        //     'name'     => 'required',
+        //     'email'    => 'required|email|unique:users',
+        //     'password' => 'required|min:6',
+        //     // 'role_id'  => 'nullable|exists:roles,id',
+        // ]);
 
-        $data['password'] = bcrypt($data['password']);
-
-        $user = User::create($data);
+        $request['password'] = bcrypt($request['password']);
+        $user = User::create($request->toArray());
         return new UserResource($user->load('role'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
-        //   // Validate basic user data
-        // $data = $request->validate([
-        //     'name' => 'sometimes|string|max:255',
-        //     'email' => 'sometimes|email',
-        //     'role_id' => 'nullable|exists:roles,id'
-        // ]);
-
-        // // Update user attributes
-        // $user = User::findOrFail($id);
-        // $user->update([
-        //     'name' => $data['name'],
-        //     'email' => $data['email']
-        // ]);
-
-        // // Sync role if provided
-        // if ($request->has('role_id')) {
-        //     $role = Role::find($request->role_id);
-        //     $user->syncRoles($role); // This replaces all existing roles with the new one
-        // }
-
-        // // Return user with loaded role relationship
-        // return new UserResource($user->load('roles'));
-
         // Prevent users from changing their own roles
-        if (auth()->id() == $id && $request->has('role_id')) {
-            return response()->json([
-                'message' => 'You cannot change your own role.',
-            ], 403);
+           
+        $user = $request->user(); // Get the authenticated user
+
+        if (! ($user->hasRole('Admin') || $user->hasPermissionTo('edit_user'))) {
+            return response()->json(['message' => 'Forbidden.You cannot change your own role or permission.'], 403);
         }
 
-        // Validate user data
-        $data = $request->validate([
-            'name'  => 'sometimes|string|max:255',
-            'email' => 'sometimes|email',
-            //'role_id' => 'nullable|exists:roles,id',
-        ]);
+
+
+        // // Validate user data
+        // $data = $request->validate([
+        //     'name'  => 'sometimes|string|max:255',
+        //     'email' => 'sometimes|email',
+        //     //'role_id' => 'nullable|exists:roles,id',
+        // ]);
 
         $user = User::findOrFail($id);
 
         // Update name/email if present
         if (isset($data['name'])) {
-            $user->name = $data['name'];
+            $user->name = $request['name'];
         }
 
         if (isset($data['email'])) {
-            $user->email = $data['email'];
+            $user->email = $request['email'];
         }
 
         $user->save();
