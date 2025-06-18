@@ -5,9 +5,9 @@ namespace Database\Seeders;
 // use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -38,15 +38,10 @@ class RolePermissionSeeder extends Seeder
             'edit admin',
             'delete admin',
 
-            'view event',
-            'create event',
-            'edit event',
-            'delete event',
-
-            'view booking',
-            'create booking',
-            'edit booking',
-            'delete booking',
+            'view expense',
+            'create expense',
+            'edit expense',
+            'delete expense',
 
         ];
 

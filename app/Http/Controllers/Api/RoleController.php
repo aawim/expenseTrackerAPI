@@ -1,34 +1,30 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleResource;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 
 class RoleController extends Controller
 {
-     public function index()
+    public function index()
     {
         $roles = Role::with('permissions')->get();
         return RoleResource::collection($roles);
     }
 
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:roles,name',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
-        ]);
 
         $role = Role::create([
-            'name' => $validated['name'],
+            'name' => $request['name'],
         ]);
 
-        if (!empty($validated['permissions'])) {
-            $role->permissions()->sync($validated['permissions']);
+        if (! empty($request['permissions'])) {
+            $role->permissions()->sync($request['permissions']);
         }
 
         return new RoleResource($role->load('permissions'));
@@ -39,20 +35,15 @@ class RoleController extends Controller
         return new RoleResource($role->load('permissions'));
     }
 
-    public function update(Request $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:roles,name,' . $role->id,
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
-        ]);
 
         $role->update([
-            'name' => $validated['name'],
+            'name' => $request['name'],
         ]);
 
-        if (isset($validated['permissions'])) {
-            $role->permissions()->sync($validated['permissions']);
+        if (isset($request['permissions'])) {
+            $role->permissions()->sync($request['permissions']);
         }
 
         return new RoleResource($role->load('permissions'));
@@ -67,7 +58,7 @@ class RoleController extends Controller
     public function syncPermissions(Request $request, Role $role)
     {
         $validated = $request->validate([
-            'permissions' => 'required|array',
+            'permissions'   => 'required|array',
             'permissions.*' => 'exists:permissions,id',
         ]);
 

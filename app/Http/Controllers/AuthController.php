@@ -29,17 +29,9 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // $user  = Auth::user();
         $user = Auth::user()->load(['roles.permissions', 'permissions']);
 
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        // return response()->json([
-        //     'token'      => $token,
-        //     'user'       => $user,
-        //     'role'       => $user->load('roles', 'permissions'),
-        //     'token_type' => 'Bearer',
-        // ]);
 
         return response()->json([
             'token'      => $token,

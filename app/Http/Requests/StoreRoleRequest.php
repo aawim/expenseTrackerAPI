@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePaymentMethodRequest extends FormRequest
+class StoreRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +21,9 @@ class StorePaymentMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'          => 'required|string|unique:roles,name',
+            'permissions'   => 'array',
+            'permissions.*' => 'exists:permissions,id',
         ];
     }
 }

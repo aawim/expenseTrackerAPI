@@ -10,13 +10,5 @@ class Role extends SpatieRole
         'name','guard_name'
     ];
 
-     
-    // public function users()
-    // {
-    //     return $this->hasMany(User::class);
-    // }
-    // public function permissions()
-    // {
-    //     return $this->belongsToMany(Permission::class);
-    // }
+
 }

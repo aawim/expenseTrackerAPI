@@ -23,19 +23,7 @@ class UserPermissionController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $request->validate([
-        //     'permissions'   => 'array',
-        //     'permissions.*' => 'exists:permissions,name',
-        // ]);
-
-        // $user = User::findOrFail($id);
-        // $user->syncPermissions($request->permissions);
-
-        // return response()->json([
-        //     'message'     => 'Permissions updated successfully.',
-        //     'permissions' => $user->permissions->pluck('name'),
-        // ]);
-
+ 
         // Prevent users from changing their own permissions
         if (Auth::id() == $id) {
             return response()->json([

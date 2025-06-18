@@ -7,7 +7,6 @@ use App\Models\Expense;
 use App\Models\Category;
 use App\Models\PaymentMethod;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Auth;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,10 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            //PermissionSeeder::class,
-            // RoleSeeder::class,
             RolePermissionSeeder::class,
-            
         ]);
 
         // System categories
@@ -48,12 +44,6 @@ class DatabaseSeeder extends Seeder
         foreach ($systemPaymentMethods as $method) {
             PaymentMethod::create($method);
         }
-
-        // Create a test user with some data
-        // $user = User::factory()->create([
-        //     'name'  => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         $user = User::where('email','admin@mail.com')->first();
         // Create some expenses for the test user

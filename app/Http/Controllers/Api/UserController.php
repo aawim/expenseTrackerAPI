@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -15,10 +15,9 @@ class UserController extends Controller
 
         $user = $request->user(); // Get the authenticated user
 
-        //   if (! $user->hasRole('Admin')) {
-        // return response()->json(['message' => 'Forbidden. Admins only.'], 403);
-        // }
-
+        if (! $user->hasRole('Admin')) {
+            return response()->json(['message' => 'Forbidden. Admins only.'], 403);
+        }
         return UserResource::collection(User::with('role')->paginate());
 
     }
@@ -29,7 +28,7 @@ class UserController extends Controller
             'name'     => 'required',
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:6',
-           // 'role_id'  => 'nullable|exists:roles,id',
+            // 'role_id'  => 'nullable|exists:roles,id',
         ]);
 
         $data['password'] = bcrypt($data['password']);
@@ -72,8 +71,8 @@ class UserController extends Controller
 
         // Validate user data
         $data = $request->validate([
-            'name'    => 'sometimes|string|max:255',
-            'email'   => 'sometimes|email',
+            'name'  => 'sometimes|string|max:255',
+            'email' => 'sometimes|email',
             //'role_id' => 'nullable|exists:roles,id',
         ]);
 
@@ -101,12 +100,9 @@ class UserController extends Controller
         return new UserResource($user->load('roles', 'permissions'));
     }
 
-
     public function getUserPermissions($userId)
     {
         $user = User::with('permissions', 'roles.permissions')->find($userId);
-        
-
 
         if (! $user) {
             return response()->json([
@@ -115,8 +111,6 @@ class UserController extends Controller
         }
         return new UserResource($user);
     }
-
-
 
     public function destroy(User $user)
     {

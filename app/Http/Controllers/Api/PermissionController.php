@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Permission;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PermissionResource;
-use App\Models\Permission;
-use Illuminate\Http\Request;
+use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 
 class PermissionController extends Controller
 {
@@ -14,14 +15,9 @@ class PermissionController extends Controller
         return PermissionResource::collection(Permission::all());
     }
 
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:permissions,name',
-            //'guard_name' => 'required|string'
-        ]);
-
-        $permission = Permission::create(array_merge($validated, ['guard_name' => 'api']));
+        $permission = Permission::create(array_merge($request->validated(), ['guard_name' => 'api']));
         return new PermissionResource($permission);
     }
 
@@ -30,13 +26,9 @@ class PermissionController extends Controller
         return new PermissionResource($permission);
     }
 
-    public function update(Request $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:permissions,name,' . $permission->id,
-        ]);
-
-        $permission->update($validated);
+        $permission->update($request->validated());
 
         return new PermissionResource($permission);
     }

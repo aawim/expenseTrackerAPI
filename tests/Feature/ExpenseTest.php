@@ -1,14 +1,16 @@
 <?php
 namespace Tests\Feature;
 
-use App\Models\Category;
-use App\Models\Expense;
-use App\Models\PaymentMethod;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Expense;
+use App\Models\Category;
+use Laravel\Sanctum\Sanctum;
+use App\Models\PaymentMethod;
 use PHPUnit\Framework\Attributes\Test;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+
 class ExpenseTest extends TestCase
 {
     use RefreshDatabase;
