@@ -37,6 +37,8 @@ class PermissionSeeder extends Seeder
             'create_expense',
             'edit_expense',
             'delete_expense',
+            
+            'dashboard',
  
      
         ];

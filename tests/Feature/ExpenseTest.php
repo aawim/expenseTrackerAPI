@@ -1,15 +1,14 @@
 <?php
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Expense;
 use App\Models\Category;
-use Laravel\Sanctum\Sanctum;
+use App\Models\Expense;
 use App\Models\PaymentMethod;
-use PHPUnit\Framework\Attributes\Test;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Laravel\Sanctum\Sanctum;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ExpenseTest extends TestCase
 {
@@ -63,7 +62,8 @@ class ExpenseTest extends TestCase
         $response = $this->postJson('/api/expenses', $payload);
 
         $response->assertCreated()
-            ->assertJsonStructure(['data' => ['id', 'amount', 'description', 'date', 'category', 'payment_method']]);
+            ->assertJsonStructure(['data' =>
+                ['id', 'amount', 'description', 'date', 'category', 'payment_method']]);
 
         $this->assertDatabaseHas('expenses', [
             'amount'      => 49.99,
@@ -84,34 +84,35 @@ class ExpenseTest extends TestCase
         $response = $this->getJson("/api/expenses/{$expense->id}");
 
         $response->assertOk()
-            ->assertJsonStructure(['data' => ['id', 'amount', 'description', 'date', 'category', 'payment_method']]);
+            ->assertJsonStructure(['data' =>
+                ['id', 'amount', 'description', 'date', 'category', 'payment_method']]);
     }
 
     #[Test]
     public function it_can_update_an_expense(): void
     {
         $expense = Expense::factory()->create([
-            'user_id' => $this->user->id,
-            'category_id' => $this->category->id,
+            'user_id'           => $this->user->id,
+            'category_id'       => $this->category->id,
             'payment_method_id' => $this->paymentMethod->id,
         ]);
 
         $payload = [
-            'amount' => 199.99,
-            'description' => 'Updated expense description',
-            'date' => now()->toDateString(),
-            'category_id' => $this->category->id,
+            'amount'            => 199.99,
+            'description'       => 'Updated expense description',
+            'date'              => now()->toDateString(),
+            'category_id'       => $this->category->id,
             'payment_method_id' => $this->paymentMethod->id,
-            'location' => 'Remote',
-            'is_recurring' => false,
+            'location'          => 'Remote',
+            'is_recurring'      => false,
         ];
 
         $response = $this->putJson("/api/expenses/{$expense->id}", $payload);
         $response->assertOk();
 
         $this->assertDatabaseHas('expenses', [
-            'id' => $expense->id,
-            'amount' => 199.99,
+            'id'          => $expense->id,
+            'amount'      => 199.99,
             'description' => 'Updated expense description',
         ]);
     }

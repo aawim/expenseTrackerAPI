@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateUserPermissionRequest;
 
 class UserPermissionController extends Controller
 {
@@ -21,7 +22,7 @@ class UserPermissionController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserPermissionRequest $request, $id)
     {
  
         // Prevent users from changing their own permissions
@@ -30,15 +31,9 @@ class UserPermissionController extends Controller
                 'message' => 'You cannot update your own permissions.',
             ], 403);
         }
-
-        $validated = $request->validate([
-            'permissions'   => 'required|array',
-            'permissions.*' => 'string|exists:permissions,name',
-        ]);
-
         $user = User::findOrFail($id);
 
-        $user->syncPermissions($validated['permissions']);
+        $user->syncPermissions($request['permissions']);
 
         return response()->json([
             'message'     => 'Permissions updated successfully.',

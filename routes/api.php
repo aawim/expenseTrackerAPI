@@ -49,8 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // User Permissions
     Route::prefix('user-permissions')->controller(UserPermissionController::class)
         ->group(function () {
-            Route::get('{id}', 'index')->name('user-permissions.index');
-            Route::patch('{id}', 'update')->name('user-permissions.update');
+            Route::get('/{permission}', 'index')->name('user-permissions.index');
+            Route::patch('/{permission}', 'update')->name('user-permissions.update');
         });
 
 });

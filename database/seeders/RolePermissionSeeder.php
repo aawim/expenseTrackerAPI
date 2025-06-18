@@ -43,6 +43,8 @@ class RolePermissionSeeder extends Seeder
             'edit_expense',
             'delete_expense',
 
+            'dashboard',
+
         ];
 
         foreach ($permissions as $perm) {
@@ -53,7 +55,7 @@ class RolePermissionSeeder extends Seeder
 
         $admin   = Role::create(['name' => 'Admin', 'guard_name' => 'api']);
         $manager = Role::create(['name' => 'Manager', 'guard_name' => 'api']);
-        $user    = Role::create(['name' => 'User', 'guard_name' => 'api']);
+        $userRole    = Role::create(['name' => 'User', 'guard_name' => 'api']);
 
         $admin->syncPermissions(Permission::where('guard_name', 'api')->get());
 
@@ -83,7 +85,7 @@ class RolePermissionSeeder extends Seeder
         );
 
         // 4. Assign Admin role to the user
-        $user->assignRole($user);
+        $user->assignRole($userRole);
 
         $user->syncPermissions([
             'view_user',
