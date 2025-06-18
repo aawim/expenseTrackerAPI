@@ -26,7 +26,7 @@ class UpdateUserRequest extends FormRequest
             'email' => [
                 'sometimes',
                 'email',
-                Rule::unique('users', 'email')->ignore($this->route('user')), // Use correct route param
+                Rule::unique('users', 'email')->ignore($this->route('user')), 
             ],
         ];
     }
