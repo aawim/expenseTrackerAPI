@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers\API;
 
-use App\Models\Expense;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use App\Http\Resources\ExpenseResource;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Resources\ExpenseResource;
+use App\Models\Expense;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ExpenseController extends Controller
 {
@@ -26,6 +26,12 @@ class ExpenseController extends Controller
                 AllowedFilter::callback('to_date', fn($query, $value) => $query->where('date', '<=', $value)),
                 AllowedFilter::callback('min_amount', fn($query, $value) => $query->where('amount', '>=', $value)),
                 AllowedFilter::callback('max_amount', fn($query, $value) => $query->where('amount', '<=', $value)),
+                // Year filter callback
+                AllowedFilter::callback('year', function ($query, $value) {
+                    if (! empty($value)) {
+                        $query->whereYear('date', $value);
+                    }
+                }),
             ])
             ->allowedIncludes(['category', 'paymentMethod'])
             ->defaultSort('-date')
